@@ -22,6 +22,21 @@ class TweetLoader:
             return
 
     def __setClient(self):
+        """
+        Sets up the Twitter API client using authentication credentials from environment variables.
+        DEPRECATED: This class is deprecated. Please use TweetLoader.TweetLoader() instead.
+        The method retrieves the following credentials from environment variables:
+        - X_BEARER_TOKEN
+        - X_API_KEY
+        - X_API_SECRET
+        - X_ACCESS_TOKEN
+        - X_ACCESS_TOKEN_SECRET
+        These credentials are used to create an authenticated tweepy.Client instance
+        which is then stored in the instance variable 'client'.
+        Returns:
+            None
+        """
+        print("[WARNING] This class is deprecated. Please use TweetLoader.TweetLoader() instead.")
         bearer_token = os.environ.get("X_BEARER_TOKEN")
         api_key = os.environ.get("X_API_KEY")
         api_secret = os.environ.get("X_API_SECRET")
@@ -29,6 +44,7 @@ class TweetLoader:
         access_token_secret = os.environ.get("X_ACCESS_TOKEN_SECRET")
 
         # Create authenticated client
+        
         client = tweepy.Client(
             bearer_token=bearer_token,
             consumer_key=api_key,
