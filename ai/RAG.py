@@ -44,8 +44,7 @@ class RAG:
         )
 
         self._initChroma()
-
-        self.loader = TweetLoader(users=["elonmusk"], n_tweets=50)
+        self._initXLoader()
 
         docs = self.loader.load()
         self._splitAndSave(docs)
@@ -63,13 +62,8 @@ class RAG:
         try:
             print("[+] creating twitter loader")
             # should return document list for later splitting
-            x_loader = (
-                TweetLoader(50, ["elonmusk"]).client.get_users_tweets(
-                    id="1788311273874108416"
-                )
-                # .load_documents()
-            )
-            return x_loader
+            x_loader = TweetLoader(users=["elonmusk"], n_tweets=50)
+            self.loader = x_loader
         except Exception as err:
             print(f"[-]{err}")
             return
