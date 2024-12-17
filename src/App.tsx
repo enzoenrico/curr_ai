@@ -3,6 +3,7 @@ import { useState, useRef, Suspense } from 'react'
 import { AsciiRenderer, OrbitControls } from '@react-three/drei'
 import { useSpring, animated } from '@react-spring/three'
 import viteLogo from '/vite.svg'
+import { FaSpinner } from 'react-icons/fa6'
 
 function Box ({ active, ...props }) {
   const meshRef = useRef()
@@ -69,13 +70,13 @@ function App () {
           </button>
         </div>
         <div className='absolute top-5 text-white px-5'>
-          <p className='text-xl font-mono'>
-            {active || !aiResponse ? (
-              <div className='animate-spin'>longasd</div>
-            ) : (
-              aiResponse
-            )}
-          </p>
+          {active || !aiResponse ? (
+            <div className='animate-spin text-3xl'>
+              <FaSpinner />
+            </div>
+          ) : (
+            <p className='text-xl font-mono'>aiResponse</p>
+          )}
         </div>
       </div>
     </>
