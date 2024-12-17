@@ -1,4 +1,6 @@
+from csv import excel
 import os
+from pydoc import cli
 from typing import List
 import chromadb
 from langchain_chroma import Chroma
@@ -11,6 +13,9 @@ from langchain_community.document_loaders import TwitterTweetLoader
 from dotenv import load_dotenv
 from numpy import number
 from regex import W
+import tweepy
+
+from utils import TweetLoader
 
 load_dotenv()
 
@@ -56,11 +61,16 @@ class RAG:
         # replace that bitch, keep the functionality tho
         # ./utils/TweetLoader.py
 
-        x_loader = TwitterTweetLoader.from_bearer_token(
-            oauth2_bearer_token=os.environ["X_BEARER_TOKEN"],
-            twitter_users=users,  # change this.
-            number_tweets=50,
-        )
+        try:
+            print("[+] creating twitter loader")
+            x_loader = TwitterTweetLoader.from_bearer_token(
+                oauth2_bearer_token=os.environ["X_BEARER_TOKEN"],
+                twitter_users=users,  # change this.
+                number_tweets=2,
+            )
+        except Exception as err:
+            print(f"[-]{err}")
+            return
 
         x_documents = x_loader.load()
         split_x_docs = self.text_splitter.split_documents(documents=x_documents)
@@ -92,5 +102,9 @@ class RAG:
         return str(response.content)
 
 
-panga = RAG()
-panga.query("what is elon's musk latest tweet about?")
+# panga = RAG()
+# panga.query("what is elon's musk latest tweet about?")
+tl = TweetLoader.TweetLoader()
+#running into 429 - too many requests
+tl.searchUser('')
+
