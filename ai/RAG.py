@@ -1,21 +1,17 @@
 from csv import excel
 import os
-from pydoc import cli
 from typing import List
+from xml.dom.minidom import Document
 import chromadb
 from langchain_chroma import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 
-from langchain_community.document_loaders import TwitterTweetLoader
-
 from dotenv import load_dotenv
-from numpy import number
-from regex import W
-import tweepy
 
-from utils import TweetLoader
+from utils.TweetLoader import TweetLoader
+
 
 load_dotenv()
 
@@ -33,8 +29,10 @@ class RAG:
 
         self.chroma_path = "./chroma/langchain_chromadb"
 
-        self.text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500, chunk_overlap=50, length_function=len
+        self.text_splitter: RecursiveCharacterTextSplitter = (
+            RecursiveCharacterTextSplitter(
+                chunk_size=500, chunk_overlap=50, length_function=len
+            )
         )
 
         self.chat = ChatOpenAI(temperature=0.7, model="gpt-4o-mini")
@@ -47,34 +45,34 @@ class RAG:
 
         self._initChroma()
 
-        # remove hardcoded values
-        self.x_document_list = self._initXLoader(["elonmusk"])
+        self.loader = TweetLoader(users=["elonmusk"], n_tweets=50)
 
-        # chromadb.from_documents(split_documents(Document()))
-        #                           ^class document, no matter from what loader
-        # self.store = #chromadb
-        # use chromadb.as_retriever to find similar
+        docs = self.loader.load()
+        self._splitAndSave(docs)
 
-    def _initXLoader(self, users: List[str]):
+    def _splitAndSave(self, documents):
+        split_docs = self.text_splitter.split_documents(documents)
+        try:
+            self.chroma.add_documents(split_docs)
+            print("[+]Successfully added documents to chromadb")
+        except Exception as err:
+            print(f"[-]Something went wrong adding documents to chromadb: \n {err}")
+
+    def _initXLoader(self):
         "loads tweets from users into a List[Document] and returns it"
-
-        # replace that bitch, keep the functionality tho
-        # ./utils/TweetLoader.py
-
         try:
             print("[+] creating twitter loader")
-            x_loader = TwitterTweetLoader.from_bearer_token(
-                oauth2_bearer_token=os.environ["X_BEARER_TOKEN"],
-                twitter_users=users,  # change this.
-                number_tweets=2,
+            # should return document list for later splitting
+            x_loader = (
+                TweetLoader(50, ["elonmusk"]).client.get_users_tweets(
+                    id="1788311273874108416"
+                )
+                # .load_documents()
             )
+            return x_loader
         except Exception as err:
             print(f"[-]{err}")
             return
-
-        x_documents = x_loader.load()
-        split_x_docs = self.text_splitter.split_documents(documents=x_documents)
-        self.chroma.add_documents(split_x_docs)
 
     def _initChroma(self):
         print("[+]Initializing ChromaDB client")
@@ -92,9 +90,9 @@ class RAG:
 
     def query(self, question: str) -> str:
         context_from_chroma = self.retriever.invoke(question)
+        print(f"Gathered Context: \n {context_from_chroma}")
 
         # prompt question with context
-
         prompt_with_user_question = self.prompt.format(
             outside_context=context_from_chroma, user_prompt=question
         )
@@ -102,9 +100,13 @@ class RAG:
         return str(response.content)
 
 
-# panga = RAG()
-# panga.query("what is elon's musk latest tweet about?")
-tl = TweetLoader.TweetLoader()
-#running into 429 - too many requests
-tl.searchUser('')
+panga = RAG()
+# query_answ = panga.query("what is elon's musk latest tweet about?")
+# print(f"Query Answer:\n\r{query_answ}")
+# running into 429 - too many requests
 
+while True:
+    question = input("question here \n")
+
+    query_answ = panga.query(question=question)
+    print(f"Query Answer:\n\r{query_answ}")
