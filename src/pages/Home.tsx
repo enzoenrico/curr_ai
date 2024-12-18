@@ -1,8 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useState, useRef, Suspense } from 'react'
+import { useState, useRef, Suspense, useEffect } from 'react'
 import { AsciiRenderer, OrbitControls } from '@react-three/drei'
 import { useSpring, animated } from '@react-spring/three'
-import viteLogo from '/vite.svg'
 import { FaSpinner } from 'react-icons/fa6'
 
 function Box ({ active, ...props }) {
@@ -15,7 +14,7 @@ function Box ({ active, ...props }) {
 
   useFrame((state, delta) => {
     meshRef.current.rotation.y += delta
-    meshRef.current.rotation.x += delta 
+    meshRef.current.rotation.x += delta
   })
 
   return (
@@ -30,10 +29,14 @@ function Box ({ active, ...props }) {
   )
 }
 
-function App () {
+function Home () {
   const [active, setLoading] = useState(false)
   const [userInput, setUserInput] = useState<string>('')
   const [aiResponse, setAIResponse] = useState<string>('')
+
+  useEffect(() => {
+    console.log('ur on home')
+  })
 
   const callAi = async () => {
     setLoading(true)
@@ -90,4 +93,4 @@ function App () {
   )
 }
 
-export default App
+export default Home
