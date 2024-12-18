@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 export const Box = ({ active, ...props }) => {
-  const meshRef = useRef()
+  const meshRef = useRef<Mesh>()
 
   const { scale } = useSpring({
     scale: active ? [0.4, 0.4, 0.4] : [0.8, 0.8, 0.8],
@@ -13,6 +13,16 @@ export const Box = ({ active, ...props }) => {
   useFrame((state, delta) => {
     meshRef.current.rotation.y += delta
     meshRef.current.rotation.x += delta * 0.9
+
+    // sine function to fluctuate the scale of model (breathing)
+    meshRef.current.scale.x =
+      scale.get()[0] * (1 + Math.sin(state.clock.elapsedTime * 1.25) * 0.25)
+
+    meshRef.current.scale.y =
+      scale.get()[0] * (1 + Math.sin(state.clock.elapsedTime * 1.25) * 0.25)
+
+    meshRef.current.scale.z =
+      scale.get()[0] * (1 + Math.sin(state.clock.elapsedTime * 1.25) * 0.25)
   })
 
   return (

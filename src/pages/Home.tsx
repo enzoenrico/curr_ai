@@ -1,8 +1,6 @@
-import { Canvas } from '@react-three/fiber'
-import { useState, Suspense } from 'react'
-import { AsciiRenderer, OrbitControls } from '@react-three/drei'
+import { useState } from 'react'
+import { ModelCanvas } from '../components/ModelCanvas'
 import { FaSpinner } from 'react-icons/fa6'
-import { Box } from '../components/Box'
 
 export const Home = () => {
   const [active, setLoading] = useState(false)
@@ -23,21 +21,7 @@ export const Home = () => {
   return (
     <>
       <div className='h-screen w-screen flex items-center justify-center relative'>
-        <Canvas camera={{ position: [0, 1, 2] }}>
-          {/* <ambientLight position={[1, 1, 2]} intensity={0.3} /> */}
-          {/* <spotLight position={[3, 1, 2]} intensity={0.25} color='#ffffff' /> */}
-          <Suspense
-            fallback={
-              <div className='animate-spin text-3xl'>
-                <FaSpinner />
-              </div>
-            }
-          >
-            <Box position={[0, 0, 0]} active={active} setActive={setLoading} />
-          </Suspense>
-          <AsciiRenderer fgColor='#8b0000' bgColor='black' />
-          <OrbitControls />
-        </Canvas>
+        <ModelCanvas loading={active} setLoading={setLoading} />
         <div className='absolute bottom-5 w-full flex items-center justify-center gap-8'>
           <input
             type='text'
