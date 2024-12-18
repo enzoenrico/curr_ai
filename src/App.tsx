@@ -13,16 +13,19 @@ function Box ({ active, ...props }) {
     config: { mass: 1, tension: 170, friction: 26 }
   })
 
-  useFrame((state, delta) => (meshRef.current.rotation.y += delta))
+  useFrame((state, delta) => {
+    meshRef.current.rotation.y += delta
+    meshRef.current.rotation.x += delta * 0.9
+  })
 
   return (
     <animated.mesh {...props} ref={meshRef} scale={scale}>
       {active ? (
-        <sphereGeometry args={[1, 32, 32]} />
-      ) : (
         <boxGeometry args={[1, 1, 1]} />
+      ) : (
+        <coneGeometry args={[1, 2, 3]} />
       )}
-      <meshStandardMaterial color={'white'} roughness={0.5} />
+      <meshStandardMaterial color={'white'} roughness={0.8} />
     </animated.mesh>
   )
 }
@@ -36,6 +39,7 @@ function App () {
     setLoading(true)
     try {
       console.log(userInput)
+      await new Promise(resolve => setTimeout(resolve, 2000))
       setAIResponse('bonga bong')
     } finally {
       setLoading(false)
@@ -46,8 +50,8 @@ function App () {
     <>
       <div className='h-screen w-screen flex items-center justify-center relative'>
         <Canvas camera={{ position: [0, 1, 2] }}>
-          <ambientLight position={[0, 1, 1]} intensity={0.3} />
-          <spotLight position={[5, 1, 2]} intensity={0.4} color='#ffffff' />
+          {/* <ambientLight position={[1, 1, 2]} intensity={0.3} /> */}
+          {/* <spotLight position={[3, 1, 2]} intensity={0.25} color='#ffffff' /> */}
           <Suspense fallback={<div>loading</div>}>
             <Box position={[0, 0, 0]} active={active} setActive={setLoading} />
           </Suspense>
