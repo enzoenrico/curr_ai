@@ -26,7 +26,7 @@ export const Home = () => {
           <input
             type='text'
             placeholder='hello'
-            className='w-3/5 p-1 px-4 rounded-full bg-red-600/40 border-2 text-white'
+            className='w-3/5 p-1 px-4  bg-slate-600/20 border-2 border-red-600 text-white orbitron'
             onChange={e => setUserInput(e.target.value)}
           />
           <button
@@ -37,13 +37,13 @@ export const Home = () => {
             Transform
           </button>
         </div>
-        <div className='absolute top-5 text-white px-5'>
+        <div className='absolute top-50 text-white px-5'>
           {active || !aiResponse ? (
             <div className='animate-spin text-3xl'>
               <FaSpinner />
             </div>
           ) : (
-            <p className='text-xl font-mono'>aiResponse</p>
+            <p className='font-mono orbitron vt323 text-4xl '>aiResponse</p>
           )}
         </div>
       </div>

@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.orbitron {
+    font-family: 'Orbitron', serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.vt323 {
+    font-family: 'VT323', serif;
+    font-style: normal;
+}
