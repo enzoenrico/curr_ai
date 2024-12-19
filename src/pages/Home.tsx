@@ -1,6 +1,9 @@
+import { motion } from 'motion/react'
+
 import { useState } from 'react'
 import { ModelCanvas } from '../components/ModelCanvas'
 import { FaSpinner } from 'react-icons/fa6'
+import { AnimatedResponse } from '../components/AnimatedResponse'
 
 export const Home = () => {
   const [active, setLoading] = useState(false)
@@ -43,7 +46,9 @@ export const Home = () => {
               <FaSpinner />
             </div>
           ) : (
-            <p className='font-mono orbitron vt323 text-4xl '>aiResponse</p>
+            <motion.p className='font-mono orbitron vt323 text-4xl '>
+              <AnimatedResponse text={aiResponse} />
+            </motion.p>
           )}
         </div>
       </div>
